@@ -1,5 +1,6 @@
 package pl.simplecoding.coimbrajug
 
+import org.springframework.data.repository.CrudRepository
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -17,3 +18,6 @@ data class Authority(
         @Column(name = "username") var name: String = "Name",
         @Column(name = "authority") var authority: String = "Authority"
 )
+
+
+interface AuthRepository: CrudRepository<Authority, Long>
