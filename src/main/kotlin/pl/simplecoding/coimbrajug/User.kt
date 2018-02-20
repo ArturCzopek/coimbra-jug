@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.data.repository.CrudRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.security.Principal
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -59,4 +60,74 @@ class UserInsertRunner(
             userRepository.save(user)
         }
     }
+}
+
+
+@Service
+class UserService(private val userRepository: UserRepository) {
+
+    fun getData(principal: Principal) = userRepository.findOneByName(principal.name)
+
+    fun giveToken(toUserId: Long, tokenType: TokenType, principal: Principal) {
+        val loggedInUser = userRepository.findOneByName(principal.name)
+        val userToGive = userRepository.findById(toUserId).get()
+
+        when (tokenType) {
+            TokenType.GREEN -> giveGreenToken(loggedInUser, userToGive)
+            TokenType.RED -> giveRedToken(loggedInUser, userToGive)
+        }
+    }
+
+    fun getAllUsers(principal: Principal): List<Map<String, Any>> {
+        return userRepository
+                .findAll()
+                .map { mapOf("id" to it.id, "name" to it.name) }
+                .filter { it["name"] as String != principal.name }
+    }
+
+    private fun giveGreenToken(loggedInUser: User, userToGive: User) {
+        if (loggedInUser.toGiveGreen <= 0) {
+            return
+        } else {
+            loggedInUser transferGreenTokenTo userToGive
+            userRepository.run {
+                save(loggedInUser)
+                save(userToGive)
+            }
+        }
+    }
+
+    private fun giveRedToken(loggedInUser: User, userToGive: User) {
+        if (loggedInUser.toGiveRed <= 0) {
+            return
+        } else {
+            loggedInUser transferRedTokenTo userToGive
+            userRepository.run {
+                save(loggedInUser)
+                save(userToGive)
+            }
+        }
+    }
+}
+
+infix fun User.transferGreenTokenTo(userTo: User) {
+    this.toGiveGreen--
+    userTo.receivedGreen++
+    println("""
+        Sent green token from
+        ${this.name}
+        to
+        ${userTo.name}
+    """.trimIndent())
+}
+
+infix fun User.transferRedTokenTo(userTo: User) {
+    this.toGiveRed--
+    userTo.receivedRed++
+    println("""
+        Sent red token from
+        ${this.name}
+        to
+        ${userTo.name}
+    """.trimIndent())
 }
