@@ -25,10 +25,10 @@ class MvcConfig : WebMvcConfigurer {
 
     override fun addViewControllers(registry: ViewControllerRegistry) {
         registry.run {
-            addViewController("/home").setViewName("home")
-            addViewController("/").setViewName("home")
-            addViewController("/login").setViewName("login")
-            addViewController("/db-console").setViewName("db-console")
+            this += "/home" to "home"
+            this += "/" to "home"
+            this += "/login" to "login"
+            this += "/db-console" to "db-console"
         }
     }
 }
@@ -63,3 +63,9 @@ class SecurityConfiguration(
                 .passwordEncoder(bCryptPasswordEncoder)
     }
 }
+
+operator fun ViewControllerRegistry.plusAssign(controllerWithName: ControllerData) {
+    this.addViewController(controllerWithName.first).setViewName(controllerWithName.second)
+}
+
+typealias ControllerData = Pair<String, String>

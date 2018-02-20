@@ -63,6 +63,8 @@ class UserInsertRunner(
 }
 
 
+typealias UsersDataList = List<Map<String, Any>>
+
 @Service
 class UserService(private val userRepository: UserRepository) {
 
@@ -78,7 +80,7 @@ class UserService(private val userRepository: UserRepository) {
         }
     }
 
-    fun getAllUsers(principal: Principal): List<Map<String, Any>> {
+    fun getAllUsers(principal: Principal): UsersDataList {
         return userRepository
                 .findAll()
                 .map { mapOf("id" to it.id, "name" to it.name) }
