@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Kotlin Token Application - Log In</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .card-container.card {
+            max-width: 350px;
+            padding: 40px 40px;
+        }
+
+        /*
+         * Card
+         */
+        .card {
+            background-color: #F7F7F7;
+            /* just in case there no content*/
+            padding: 20px 25px 30px;
+            margin: 0 auto 25px;
+            margin-top: 50px;
+            /* shadows and rounded borders */
+            -moz-border-radius: 2px;
+            -webkit-border-radius: 2px;
+            border-radius: 2px;
+            -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-img {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 40px;
+            display: block;
+        }
+
+        .form-signin #inputName,
+        .form-signin #inputPassword {
+            direction: ltr;
+            height: 44px;
+            font-size: 16px;
+        }
+
+        .form-signin input[type=email],
+        .form-signin input[type=password],
+        .form-signin input[type=text],
+        .form-signin button {
+            width: 100%;
+            display: block;
+            margin-bottom: 10px;
+            z-index: 1;
+            position: relative;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .form-signin .form-control:focus {
+            border-color: rgb(104, 145, 162);
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgb(104, 145, 162);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgb(104, 145, 162);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="card card-container">
+        <img id="logo-img" class="logo-img" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Kotlin-logo.png"/>
+        <form class="form-signin" th:action="@{/login}" method="post">
+            <input type="text" id="inputName" class="form-control" name="username" placeholder="Login " required
+                   autofocus>
+            <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password"
+                   required>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign In</button>
+        </form>
+        <div th:if="${param.error}" class="text-center" style="color: red; font-weight: bold;">
+            Invalid username and password.
+        </div>
+    </div>
+</div>
+</body>
+</html>

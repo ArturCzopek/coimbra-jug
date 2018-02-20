@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Kotlin Token Application - https://SimpleCoding.pl</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <style>
+        .user-data h1 {
+            margin-bottom: 20px;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .user-data h3 {
+            font-weight: bold;
+            color: #5a7391;
+        }
+
+        .user-data h4 {
+            font-size: 20px;
+            color: #5b9bd1;
+        }
+
+        h4.red {
+            color: red;
+            font-weight: bold;
+        }
+
+        h4.green {
+            color: green;
+            font-weight: bold;
+        }
+
+        /* Profile container */
+        .profile {
+            margin: 20px 0;
+        }
+
+        /* Profile sidebar */
+        .profile-sidebar {
+            padding: 20px 0 10px 0;
+            background: #fff;
+        }
+
+        .profile-userpic {
+            display: flex;
+        }
+
+        .profile-userpic img {
+            float: none;
+            margin: 0 auto;
+            width: 50%;
+            height: 50%;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+
+        .profile-usertitle {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-usertitle-name {
+            color: #5a7391;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .profile-usertitle-job {
+            text-transform: uppercase;
+            color: #5b9bd1;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .profile-userbuttons {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .profile-userbuttons .btn {
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 15px;
+            margin-right: 5px;
+        }
+
+        .profile-userbuttons .btn:last-child {
+            margin-right: 0px;
+        }
+    </style>
+</head>
+<body>
+<script>
+    $(document).ready(() => {
+        loadUserList();
+        loadUserData();
+    });
+
+    addUserToGrid = users => {
+        $("#rows").html("");
+        users.forEach(user => {
+            $("#rows").html(
+                $("#rows").html() +
+                "<div class='col-md-3'>" +
+                "<div class='profile-sidebar'>" +
+                "<div class='profile-userpic'>" +
+                "<img src='https://upload.wikimedia.org/wikipedia/commons/b/b5/Kotlin-logo.png'>" +
+                "</div>" +
+                "<div class='profile-usertitle'>" +
+                "<div class='profile-usertitle-name'>" +
+                user.name + "<span class='fa fa-envelope small pull-right'> </span>" +
+                "</div>" +
+                "<div class='profile-usertitle-job'>" +
+                "Coworker" +
+                "</div>" +
+                "</div>" +
+                "<div  class='profile-userbuttons'>" +
+                "<button type='button' onclick='sendToken(" + user.id + ", \"green\")'" + " class='btn btn-success btn-sm'>Give green</button>" +
+                "<button type='button' onclick='sendToken(" + user.id + ", \"red\")'" + " class='btn btn-danger btn-sm'>Give red</button>" +
+                "</div>" +
+                "</div>" +
+                "</div>")
+        })
+    }
+
+    loadUserList = () => {
+        $.get("/usersList")
+            .done(users => addUserToGrid(users));
+    }
+
+    loadUserData = () => {
+        $.get("/me")
+            .done(me => {
+                $("#receivedGreen").text(me.receivedGreen);
+                $("#toGiveGreen").text(me.toGiveGreen);
+                $("#receivedRed").text(me.receivedRed);
+                $("#toGiveRed").text(me.toGiveRed);
+            });
+    }
+
+
+    sendToken = (toUserId, tokenType) => {
+        $.post("/action", {toUserId, tokenType})
+            .done(() => loadUserData());
+    }
+
+</script>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Kotlin Token App - https://simplecoding.pl</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="user-data text-center">
+            <div class="row">
+                <h1 th:inline="text">Hello, [[${#httpServletRequest.remoteUser}]]!</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <h3>Received green</h3>
+                    <h4 class="green" id="receivedGreen">-</h4>
+                </div>
+                <div class="col-md-3">
+                    <h3>Received red</h3>
+                    <h4 class="red" id="receivedRed">-</h4>
+                </div>
+                <div class="col-md-3">
+                    <h3>Green to give</h3>
+                    <h4 class="green" id="toGiveGreen">-</h4>
+                </div>
+                <div class="col-md-3">
+                    <h3>Red to give</h3>
+                    <h4 class="red" id="toGiveRed">-</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="rows" class="row profile"></div>
+</body>
+</html>
