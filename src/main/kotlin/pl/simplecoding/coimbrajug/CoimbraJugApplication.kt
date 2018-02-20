@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @SpringBootApplication
 class CoimbraJugApplication
 
+
 fun main(args: Array<String>) {
     SpringApplication.run(CoimbraJugApplication::class.java, *args)
 }
