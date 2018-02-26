@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 /**
  * @Author Artur Czopek
- * @Link https://simplecoding.pl/coimbra-jug
+ * @Link https://simplecoding.pl/coimbra-kotlin
  */
 
 @Entity

@@ -2,7 +2,7 @@ package pl.simplecoding.coimbrajug
 
 /**
  * @Author Artur Czopek
- * @Link https://simplecoding.pl/coimbra-jug
+ * @Link https://simplecoding.pl/coimbra-kotlin
  */
 
 enum class TokenType {

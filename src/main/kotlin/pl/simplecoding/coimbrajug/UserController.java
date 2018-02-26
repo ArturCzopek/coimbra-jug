@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * @Author Artur Czopek
- * @Link https://simplecoding.pl/coimbra-jug
+ * @Link https://simplecoding.pl/coimbra-kotlin
  */
 
 @RestController
